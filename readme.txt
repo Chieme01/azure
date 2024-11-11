@@ -1,8 +1,6 @@
-Required parameters:
-subscription_id     
-tenant_id      
-
-HOW TO USE:
+******************************************************************************************
+HOW TO USE
+******************************************************************************************
 module "kubernetes_cluster" {
   source                = "github.com/Chieme01/azure"
 }
@@ -22,11 +20,13 @@ provider "azurerm" {
     }
   }
 
-  subscription_id = var.subscription_id
-  tenant_id       = var.tenant_id    
+  subscription_id = <YOUR SUBSCRIPTION ID>
+  tenant_id       = <YOUR TENANT ID>
 }
 
-Cool things:
+******************************************************************************************
+COOL THINGS
+******************************************************************************************
 Azure System Assigned identity
 Terraform conditional statements
 Use of Terraform for loops
