@@ -1,0 +1,37 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - gpg
+write_files:
+  - path: /etc/apt/sources.list.d/kubernetes.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /
+  - path: /etc/apt/sources.list.d/cri-o.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/ /
+  - owner: azureuser:azureuser
+    defer: true
+    path: /k8config/kubeadm-config.yaml
+    content: |
+      apiVersion: kubeadm.k8s.io/v1beta4
+      kind: InitConfiguration
+      nodeRegistration:
+        criSocket: unix:///var/run/cri-dockerd.sock
+runcmd:
+  - mkdir -p -m 755 /etc/apt/keyrings
+  - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  - apt-get update
+  - apt-get install -y cri-o kubelet kubeadm kubectl
+  - systemctl start crio.service
+  - apt-mark hold kubelet kubeadm kubectl cri-o
+  - systemctl enable --now kubelet
+  - swapoff -a
+  - modprobe br_netfilter
+  - sysctl -w net.ipv4.ip_forward=1

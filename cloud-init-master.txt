@@ -1,0 +1,48 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - gpg
+write_files:
+  - path: /etc/apt/sources.list.d/kubernetes.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /
+  - path: /etc/apt/sources.list.d/cri-o.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/ /
+  - owner: azureuser:azureuser
+    defer: true
+    path: /k8config/kubeadm-config.yaml
+    content: |
+      apiVersion: kubeadm.k8s.io/v1beta4
+      kind: InitConfiguration
+      nodeRegistration:
+        criSocket: unix:///var/run/cri-dockerd.sock
+  - path: /devops/kubeadm_init_output.txt
+    content: |
+      succes!
+runcmd:
+  - mkdir -p -m 755 /etc/apt/keyrings
+  - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  - apt-get update
+  - apt-get install -y cri-o kubelet kubeadm kubectl
+  - systemctl start crio.service
+  - apt-mark hold kubelet kubeadm kubectl cri-o
+  - systemctl enable --now kubelet
+  - swapoff -a
+  - modprobe br_netfilter
+  - sysctl -w net.ipv4.ip_forward=1
+  - kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$(hostname -I | awk '{print $1}') >> "/devops/kubeadm_init_output.txt" 2>&1
+  - mkdir -p /home/azureuser/.kube
+  - sudo cp -i /etc/kubernetes/admin.conf /home/azureuser/.kube/config
+  - sudo chown azureuser:1000 /home/azureuser/.kube/config
+  - kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.31/net.yaml
+# Install Azure CLI then login
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  - az login --identity
