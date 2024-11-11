@@ -129,3 +129,8 @@ variable "common_tags" {
     environment = "dev"
   }
 }
+
+variable "deploy_extension" {
+  default     = false
+  description = "Deploying extension at initial run tends fail. Recommended to deploy after initial run."
+}

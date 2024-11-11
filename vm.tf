@@ -136,6 +136,7 @@ resource "azurerm_public_ip" "vm_pip" {
 }
 
 resource "azurerm_virtual_machine_extension" "extension_script" {
+  count                = var.deploy_extension ? 1 : 0
   name                 = "k8-bootstrap-extension"
   virtual_machine_id   = azurerm_linux_virtual_machine.masternode[0].id
   publisher            = "Microsoft.Azure.Extensions"
