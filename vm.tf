@@ -59,7 +59,7 @@ resource "azurerm_linux_virtual_machine" "masternode" {
   eviction_policy = local.spot_instance ? "Deallocate" : null
   #max_bid_price  = 0.01557
   custom_data     = data.template_cloudinit_config.masterconfig.rendered
-  user_data       = filebase64("./script.sh")
+  #user_data       = filebase64("${path.module}/script.sh")
 }
 
 resource "azurerm_linux_virtual_machine" "worker_nodes" {
