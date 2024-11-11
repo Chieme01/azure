@@ -109,14 +109,14 @@ resource "azurerm_role_assignment" "role_assignment" {
 data "template_cloudinit_config" "config" {
   base64_encode = true
   part {
-    content = file("cloud-init-worker.txt")
+    content = file("${path.module}/cloud-init-worker.txt")
   }
 }
 
 data "template_cloudinit_config" "masterconfig" {
   base64_encode = true
   part {
-    content = file("cloud-init-master.txt")
+    content = file("${path.module}/cloud-init-master.txt")
   }
 }
 
