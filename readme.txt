@@ -1,7 +1,9 @@
 *****************************************************************************************************************************
 ABOUT
 *****************************************************************************************************************************
-This module is to deploy Kubernetes cluster on Azure Virtual Machines, intended for practising Kubernetes in a cloud lab environment. It is not a solution for production environments. It also provisions other basic, and dependent resources like Virtual Network, NAT Gateway, Bastion Host, Key Vault Secret Engine and others.
+This module is to deploy Kubernetes cluster on Azure Virtual Machines, intended for practising Kubernetes in a cloud lab environment. 
+It is not a solution for production environments. 
+It also provisions other basic, and dependent resources like Virtual Network, NAT Gateway, Bastion Host, Key Vault Secret Engine and others.
 
 *****************************************************************************************************************************
 HOW TO USE
