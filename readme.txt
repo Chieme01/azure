@@ -27,8 +27,8 @@ provider "azurerm" {
     }
   }
 
-  subscription_id = <YOUR SUBSCRIPTION ID>
-  tenant_id       = <YOUR TENANT ID>
+  subscription_id                             = <YOUR SUBSCRIPTION ID>
+  tenant_id                                   = <YOUR TENANT ID>
 }
 
 *****************************************************************************************************************************
