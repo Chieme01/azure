@@ -7,7 +7,7 @@ This module is to deploy Kubernetes cluster on Azure Virtual Machines, intended 
 HOW TO USE
 **********************************************************************************************************************************************************************************
 module "kubernetes_cluster" {
-  source                = "github.com/Chieme01/azure"
+  source                                      = "github.com/Chieme01/azure"
 }
 
 provider "azurerm" {
