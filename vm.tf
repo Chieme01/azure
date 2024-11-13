@@ -149,5 +149,6 @@ resource "azurerm_virtual_machine_extension" "extension_script" {
  }
 SETTINGS
 
-  tags = var.common_tags
+  tags                = var.common_tags
+  depends_on          = [ azurerm_linux_virtual_machine.masternode ]
 }
