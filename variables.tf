@@ -167,3 +167,7 @@ variable "container_access_type" {
   default     = "private"
   description = "The Access Level configured for this Container. Possible values are blob, container or private"
 }
+
+variable "storage_account_name" {
+  default     = "k8devopsstorageaccount"
+}
