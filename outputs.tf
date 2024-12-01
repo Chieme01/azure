@@ -25,3 +25,11 @@ output "key_vault_name" {
 output "key_vault_id" {
   value = azurerm_key_vault.key_vault.id
 }
+
+output "storage_account_id" {
+  value = azurerm_key_vault.k8-devops-container.id
+}
+
+output "container_id" {
+  value = azurerm_key_vault.k8-devops-sa.id
+}
