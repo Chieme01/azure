@@ -58,7 +58,7 @@ resource "azurerm_linux_virtual_machine" "masternode" {
   priority        = local.priority
   eviction_policy = local.spot_instance ? "Deallocate" : null
   #max_bid_price  = 0.01557
-  custom_data     = data.template_cloudinit_config.masterconfig.rendered
+  custom_data     = data.template_cloudinit_config.masterconfig.rendered # cloudinit_config.azure_cloud_config
   #user_data       = filebase64("${path.module}/script.sh")
   tags = merge(var.common_tags, var.masternode_tags)
 }

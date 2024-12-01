@@ -1,4 +1,4 @@
-data "cloudinit_config" "my_cloud_config" {
+data "cloudinit_config" "azure_cloud_config" {
   gzip          = false
   base64_encode = false
 
