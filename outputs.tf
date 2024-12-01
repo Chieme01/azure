@@ -31,6 +31,10 @@ output "storage_account_id" {
 }
 
 output "container_id" {
+  value = azurerm_storage_container.k8-devops-container.resource_manager_id
+}
+
+output "container_url_id" {
   value = azurerm_storage_container.k8-devops-container.id
 }
 
