@@ -6,6 +6,14 @@ output "master_nodes_id" {
   value = [for v in azurerm_linux_virtual_machine.masternode : v.id] 
 }
 
+output "worker_nodes_private_ip" {
+  value = [for node in azurerm_linux_virtual_machine.worker_nodes : node.private_ip_address]
+}
+
+output "worker_nodes_private_ip_addresses" {
+  value = [for node in azurerm_linux_virtual_machine.worker_nodes : node.private_ip_addresses]
+}
+
 output "resource_group_name" {
   value = azurerm_resource_group.rg.name
 }
