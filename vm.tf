@@ -106,6 +106,13 @@ resource "azurerm_role_assignment" "role_assignment" {
   principal_id          = azurerm_linux_virtual_machine.masternode[count.index].identity[0].principal_id
 }
 
+resource "azurerm_role_assignment" "blob_data_owner_role_assignment" {
+  count                 = local.num_of_masters 
+  scope                 = azurerm_key_vault.key_vault.id
+  role_definition_name  = "Storage Blob Data Contributor" 
+  principal_id          = azurerm_linux_virtual_machine.masternode[count.index].identity[0].principal_id
+}
+
 data "template_cloudinit_config" "config" {
   base64_encode = true
   part {

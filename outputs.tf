@@ -1,5 +1,9 @@
-output "azurerm_linux_virtual_machine_name" {
+output "master_nodes_name" {
   value = [for v in azurerm_linux_virtual_machine.masternode : v.name] 
+}
+
+output "master_nodes_id" {
+  value = [for v in azurerm_linux_virtual_machine.masternode : v.id] 
 }
 
 output "resource_group_name" {
