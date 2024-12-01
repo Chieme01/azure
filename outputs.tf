@@ -33,3 +33,7 @@ output "storage_account_id" {
 output "container_id" {
   value = azurerm_storage_container.k8-devops-container.id
 }
+
+output "master_node_identity_principal_id" {
+  value = [for v in azurerm_linux_virtual_machine.masternode : v.identity[0].principal_id] 
+}
