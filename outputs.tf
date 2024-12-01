@@ -27,9 +27,9 @@ output "key_vault_id" {
 }
 
 output "storage_account_id" {
-  value = azurerm_storage_account.k8-devops-container.id
+  value = azurerm_storage_account.k8-devops-sa.id
 }
 
 output "container_id" {
-  value = azurerm_storage_container.k8-devops-sa.id
+  value = azurerm_storage_container.k8-devops-container.id
 }
