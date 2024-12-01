@@ -23,7 +23,7 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_linux_virtual_machine" "masternode" {
   count                 = local.num_of_masters
-  name                  = join("-", ["master-node", count.index]) #"masternode"
+  name                  = join("-", ["master-node", count.index])
   resource_group_name   = local.resource_group_name
   location              = local.resource_group_location
   size                  = var.master_vm_size
@@ -60,6 +60,7 @@ resource "azurerm_linux_virtual_machine" "masternode" {
   #max_bid_price  = 0.01557
   custom_data     = data.template_cloudinit_config.masterconfig.rendered
   #user_data       = filebase64("${path.module}/script.sh")
+  tags = merge(var.common_tags, var.masternode_tags)
 }
 
 resource "azurerm_linux_virtual_machine" "worker_nodes" {
@@ -97,6 +98,7 @@ resource "azurerm_linux_virtual_machine" "worker_nodes" {
   }
 
   custom_data = data.template_cloudinit_config.config.rendered
+  tags = merge(var.common_tags, var.workernode_tags)
 }
 
 resource "azurerm_role_assignment" "role_assignment" {

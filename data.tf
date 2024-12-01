@@ -15,7 +15,8 @@ data "cloudinit_config" "my_cloud_config" {
             "curl",
             "gnupg",
             "lsb-release",
-            "gpg"
+            "gpg",
+            "software-properties-common"
         ],
         "write_files" : [
           {
@@ -34,6 +35,8 @@ data "cloudinit_config" "my_cloud_config" {
           },
         ],
         "runcmd" : [
+            "sudo add-apt-repository --yes --update ppa:ansible/ansible",
+            "sudo apt install ansible",
             "mkdir -p -m 755 /etc/apt/keyrings",
             "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
             "curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg",

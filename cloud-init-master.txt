@@ -8,6 +8,7 @@ packages:
   - gnupg
   - lsb-release
   - gpg
+  - software-properties-common
 write_files:
   - path: /etc/apt/sources.list.d/kubernetes.list
     content: |
@@ -27,6 +28,8 @@ write_files:
     content: |
       succes!
 runcmd:
+  - sudo add-apt-repository --yes --update ppa:ansible/ansible
+  - sudo apt install -y ansible
   - mkdir -p -m 755 /etc/apt/keyrings
   - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
   - curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg

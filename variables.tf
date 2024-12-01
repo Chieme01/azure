@@ -130,6 +130,18 @@ variable "common_tags" {
   }
 }
 
+variable "masternode_tags" {
+  default = {
+    application = "kubernetes-master"
+  }
+}
+
+variable "workernode_tags" {
+  default = {
+    application = "kubernetes-worker"
+  }
+}
+
 variable "deploy_extension" {
   default     = false
   description = "Deploying extension at initial run tends fail. Recommended to deploy after initial run."
