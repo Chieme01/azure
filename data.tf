@@ -1,6 +1,6 @@
 data "cloudinit_config" "azure_cloud_config" {
   gzip          = false
-  base64_encode = false
+  base64_encode = true
 
   part {
     content_type = "text/cloud-config"
@@ -22,7 +22,7 @@ data "cloudinit_config" "azure_cloud_config" {
         "write_files" : [
           {
             "path" : "/etc/ansible/azure_rm.yml",
-            "content" : "plugin: azure.azcollection.azure_rm\n auth_source: auto\n include_vm_resource_groups: - ${local.resource_group_name}",
+            "content" : "plugin: azure.azcollection.azure_rm\nauth_source: auto\ninclude_vm_resource_groups: ${local.resource_group_name}",
           },
           {
             "path" : "/etc/apt/sources.list.d/kubernetes.list",
