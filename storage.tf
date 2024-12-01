@@ -24,7 +24,7 @@ resource "azurerm_storage_blob" "ansible_file" {
 
 resource "azurerm_role_assignment" "blob_data_owner_role_assignment" {
   count                 = local.num_of_masters 
-  scope                 = azurerm_storage_container.k8-devops-container.id
+  scope                 = azurerm_storage_account.k8-devops-sa.id
   role_definition_name  = "Storage Blob Data Contributor" 
   principal_id          = azurerm_linux_virtual_machine.masternode[count.index].identity[0].principal_id
 }
