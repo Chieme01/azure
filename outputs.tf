@@ -49,3 +49,7 @@ output "container_url_id" {
 output "master_node_identity_principal_id" {
   value = [for v in azurerm_linux_virtual_machine.masternode : v.identity[0].principal_id] 
 }
+
+output "public_subnet_id" {
+  value = azurerm_subnet.public_subnet.id
+}
