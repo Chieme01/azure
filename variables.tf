@@ -134,3 +134,40 @@ variable "deploy_extension" {
   default     = false
   description = "Deploying extension at initial run tends fail. Recommended to deploy after initial run."
 }
+
+#############################################################################################################
+# STORAGE VARIABLES
+#############################################################################################################
+variable "account_kind" {
+  description = "Defines the Kind of account. Valid options are BlobStorage, BlockBlobStorage, FileStorage, Storage and StorageV2."
+  default     = "StorageV2"
+}
+
+variable "account_tier" {
+  description = "Defines the Tier to use for this storage account. Valid options are Standard and Premium. For BlockBlobStorage and FileStorage accounts only Premium is valid. Blobs with a tier of Premium are of account kind StorageV2."
+  default     = "Standard"
+}
+
+variable "account_replication_type" {
+  description = "Defines the type of replication to use for this storage account. Valid options are LRS, GRS, RAGRS, ZRS, GZRS and RAGZRS."
+  default     = "LRS"
+}
+
+variable "https_traffic_only_enabled" {
+  description = "Boolean flag which forces HTTPS if enabled, see here for more information."
+  default     = true
+}
+
+variable "min_tls_version" {
+  description = "The minimum supported TLS version for the storage account. Possible values are TLS1_0, TLS1_1, and TLS1_2."
+  default     = "TLS1_2"
+}
+
+variable "container_access_type" {
+  default     = "private"
+  description = "The Access Level configured for this Container. Possible values are blob, container or private"
+}
+
+variable "storage_account_name" {
+  default     = "k8devopsstorageaccount"
+}
