@@ -10,15 +10,20 @@ data "cloudinit_config" "azure_cloud_config" {
         "package_update" : true,
         "package_upgrade": true,
         "packages" : [
+            "software-properties-common",
+            "python3-pip",
             "apt-transport-https",
             "ca-certificates",
             "curl",
             "gnupg",
             "lsb-release",
-            "gpg",
-            "software-properties-common"
+            "gpg"
         ],
         "write_files" : [
+          {
+            "path" : "/etc/ansible/azure_rm.yml",
+            "content" : "plugin: azure.azcollection.azure_rm\n auth_source: auto\n include_vm_resource_groups: - ${local.resource_group_name}",
+          },
           {
             "path" : "/etc/apt/sources.list.d/kubernetes.list",
             "content" : "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /",
@@ -35,8 +40,10 @@ data "cloudinit_config" "azure_cloud_config" {
           },
         ],
         "runcmd" : [
-            "sudo add-apt-repository --yes --update ppa:ansible/ansible",
-            "sudo apt install ansible",
+            "add-apt-repository --yes --update ppa:ansible/ansible",
+            "apt install ansible",
+            "pip3 install azure-cli",
+            "pip3 install ansible[azure]",
             "mkdir -p -m 755 /etc/apt/keyrings",
             "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
             "curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg",
@@ -52,10 +59,10 @@ data "cloudinit_config" "azure_cloud_config" {
             "mkdir -p /home/azureuser/.kube",
             "sudo cp -i /etc/kubernetes/admin.conf /home/azureuser/.kube/config",
             "sudo chown azureuser:1000 /home/azureuser/.kube/config",
-            "kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.31/net.yaml",
+            "kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.31/net.yaml"
             # Install Azure CLI then login
-            "curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash",
-            "az login --identity"
+            #"curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash",
+            #"az login --identity"
         ]
       }
     )
