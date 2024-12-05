@@ -1,0 +1,5 @@
+- name: Run az login --identity
+  hosts: localhost
+  tasks:
+    - name: Login to Azure using Managed Identity
+      shell: az login --identity
