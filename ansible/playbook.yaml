@@ -1,1 +1,29 @@
-# Bootsrap kubernetes
+---
+- name: Create a file, configure ansible
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Create directory to test ansible
+      file:
+        path: /k8config
+        state: directory
+        mode: '0777'
+    - name: Create test file
+      copy:
+        dest: /k8config/kubeadm-config.yaml
+        owner: azureuser
+        group: azureuser
+        content: |
+          ignore this but ansible works!
+    - name: Install Ansible Azure Collection 
+      ansible.builtin.command: 
+        cmd: ansible-galaxy collection install azure.azcollection --force 
+    - name: Install Ansible Modules for Azure 
+      pip: 
+        requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
+    - name: Install Azure CLI using curl 
+      ansible.builtin.shell: 
+        cmd: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash 
+    - name: Login to Azure using Managed Identity 
+      ansible.builtin.shell: 
+        cmd: az login --identity
