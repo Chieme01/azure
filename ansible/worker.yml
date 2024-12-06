@@ -1,6 +1,6 @@
 ---
 - name: Create a file, configure ansible
-  hosts: localhost
+  hosts: _kubernetes_worker
   become: yes
   tasks:
     - name: Create directory to test ansible
