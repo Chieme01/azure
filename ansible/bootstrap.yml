@@ -21,6 +21,10 @@
     - name: Install Ansible Modules for Azure 
       pip: 
         requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
+    - name: Install ansible[azure] using pip 
+      pip: 
+        name: ansible[azure] 
+        state: present
     - name: Install Azure CLI using curl 
       ansible.builtin.shell: 
         cmd: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash 
