@@ -1,5 +1,15 @@
-- name: Run az login --identity
+---
+- name: Bootstrap Kubernetes
   hosts: localhost
+  become: yes
   tasks:
-    - name: Login to Azure using Managed Identity
-      shell: az login --identity
+    - name: Write kubeadm configuration file
+      copy:
+        dest: /k8config/kubeadm-config.yaml
+        owner: azureuser
+        group: azureuser
+        content: |
+          apiVersion: kubeadm.k8s.io/v1beta4
+          kind: InitConfiguration
+          nodeRegistration:
+            criSocket: unix:///var/run/cri-dockerd.sock
