@@ -5,7 +5,7 @@
   tasks:
     - name: Ensure the file exists
       file:
-        path: /k8config/kubeadm-config.yaml
+        path: /k8config
         state: directory
         mode: '0777'
     - name: Create test file
