@@ -1,4 +1,13 @@
 ---
+- name: Create a file
+  hosts: localhost
+  tasks:
+    - name: Ensure the file exists
+      file:
+        path: /k8config/kubeadm-config.yaml
+        state: touch
+        mode: '0777'
+
 - name: Bootstrap Kubernetes
   hosts: localhost
   tasks:
