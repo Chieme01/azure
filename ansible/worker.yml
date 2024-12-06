@@ -1,17 +1,6 @@
----
-- name: Create a file, configure ansible
+----
+- name: Ping all hosts
   hosts: _kubernetes_worker
-  become: yes
   tasks:
-    - name: Create directory to test ansible
-      file:
-        path: /k8config
-        state: directory
-        mode: '0777'
-    - name: Create test file
-      copy:
-        dest: /myconfigs/kubeadm-config.yaml
-        owner: azureuser
-        group: azureuser
-        content: |
-          ignore this but ansible works!
+    - name: Ping the hosts
+      ansible.builtin.ping:
