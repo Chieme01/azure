@@ -1,9 +1,8 @@
 ---
 - name: Bootstrap Kubernetes
   hosts: localhost
-  become: yes
   tasks:
-    - name: Write kubeadm configuration file
+    - name: Create test file
       copy:
         dest: /k8config/kubeadm-config.yaml
         owner: azureuser
