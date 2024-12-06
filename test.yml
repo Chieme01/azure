@@ -1,6 +1,7 @@
 ---
 - name: Create a file
   hosts: localhost
+  become: yes
   tasks:
     - name: Ensure the file exists
       file:
