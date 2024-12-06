@@ -86,3 +86,26 @@
         name: crio
         state: started
         enabled: yes
+    - name: Hold packages 
+      ansible.builtin.shell: apt-mark hold kubelet kubeadm kubectl cri-o
+
+    - name: Enable and start kubelet service
+      systemd:
+        name: kubelet
+        state: started
+        enabled: yes
+
+    - name: Disable swap
+      command: swapoff -a
+
+    - name: Load br_netfilter module
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        state: present
+        reload: yes
