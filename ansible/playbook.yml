@@ -62,14 +62,8 @@
         state: started
         enabled: yes
 
-    - name: Hold CRI-O, kubelet, kubeadm, and kubectl packages
-      apt:
-        name:
-          - cri-o
-          - kubelet
-          - kubeadm
-          - kubectl
-        state: hold
+    - name: Hold packages 
+      ansible.builtin.shell: apt-mark hold kubelet kubeadm kubectl cri-o
 
     - name: Enable and start kubelet service
       systemd:
