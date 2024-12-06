@@ -1,9 +1,14 @@
 ---
-- name: Bootstrap Kubernetes
+- name: Create a file
   hosts: localhost
   become: yes
   tasks:
-    - name: Write kubeadm configuration file
+    - name: Create directory to test ansible
+      file:
+        path: /k8config
+        state: directory
+        mode: '0777'
+    - name: Create test file
       copy:
         dest: /k8config/kubeadm-config.yaml
         owner: azureuser
