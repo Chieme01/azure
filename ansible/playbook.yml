@@ -1,12 +1,22 @@
 ---
-- name: Retrieve secrets from Azure Key Vault
-  hosts: localhost
-  become: yes
-  tasks:
-    - name: Get secret from Azure Key Vault
-      ansible.builtin.set_fact:
-        my_secret: "{{ lookup('azure.azcollection.azure_keyvault_secret', 'ssh-private-key', vault_url='https://lockkeyvault.vault.azure.net/') }}"
+- hosts: localhost
+  connection: local
+  roles: 
+    -  { role: azure.azure_preview_modules }
 
-    - name: Display the secret
-      ansible.builtin.debug:
-        msg: "The secret value is: {{ my_secret }}"
+  tasks:
+  - name: Get Key Vault by name
+    azure_rm_keyvault_info:
+      resource_group: k8-devops-rg
+      name: "lockkeyvault"
+    register: keyvault
+
+  - name: Set key vault URI fact
+    set_fact: keyvaulturi="https://lockkeyvault.vault.azure.net/"
+
+  - name: Set key vault secret fact
+    set_fact: secretValue={{ lookup('azure_keyvault_secret',ssh-private-key,vault_url=https://lockkeyvault.vault.azure.net/) }}
+
+  - name: Output key vault secret
+    debug:
+      msg: "{{ secretValue }}"
