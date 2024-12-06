@@ -1,21 +1,23 @@
 ---
 - hosts: localhost
   connection: local
-  roles: 
-    -  { role: azure.azure_preview_modules }
+  vars:
+    tenant_id: 6a18b6fb-eb0a-4302-a49d-9bd9ea78705b
+    vault_name: lockkeyvault
+    secret_name: ssh-private-key
 
   tasks:
   - name: Get Key Vault by name
     azure_rm_keyvault_info:
-      resource_group: k8-devops-rg
-      name: "lockkeyvault"
+      resource_group: ansible-kv-test-rg
+      name: "{{ vault_name }}"
     register: keyvault
 
   - name: Set key vault URI fact
-    set_fact: keyvaulturi="https://lockkeyvault.vault.azure.net/"
+    set_fact: keyvaulturi="{{ keyvault['keyvaults'][0]['vault_uri'] }}"
 
   - name: Set key vault secret fact
-    set_fact: secretValue={{ lookup('azure_keyvault_secret',ssh-private-key,vault_url=https://lockkeyvault.vault.azure.net/) }}
+    set_fact: secretValue={{ lookup('azure_keyvault_secret',secret_name,vault_url=keyvaulturi, tenant_id=tenant_id) }}
 
   - name: Output key vault secret
     debug:
