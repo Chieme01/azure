@@ -7,10 +7,6 @@
         path: /k8config/kubeadm-config.yaml
         state: touch
         mode: '0777'
-
-- name: Bootstrap Kubernetes
-  hosts: localhost
-  tasks:
     - name: Create test file
       copy:
         dest: /k8config/kubeadm-config.yaml
