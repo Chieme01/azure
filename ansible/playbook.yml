@@ -1,6 +1,6 @@
 ---
 - name: testing
-  hosts: all
+  hosts: localhost
   become: yes
   tasks:
     - name: Update and upgrade apt packages
