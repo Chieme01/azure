@@ -86,6 +86,7 @@
         name: crio
         state: started
         enabled: yes
+    
     - name: Hold packages 
       ansible.builtin.shell: apt-mark hold kubelet kubeadm kubectl cri-o
 
