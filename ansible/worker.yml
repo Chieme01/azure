@@ -1,0 +1,116 @@
+---
+- name: Create a file, configure ansible
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Create directory to test ansible
+      file:
+        path: /k8config
+        state: directory
+        mode: '0777'
+    - name: Create test file
+      copy:
+        dest: /myconfigs/kubeadm-config.yaml
+        owner: azureuser
+        group: azureuser
+        content: |
+          ignore this but ansible works!
+    - name: Install Ansible Azure Collection 
+      ansible.builtin.command: 
+        cmd: ansible-galaxy collection install azure.azcollection --force 
+    - name: Install Ansible Modules for Azure 
+      pip: 
+        requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
+    - name: Install ansible[azure] using pip 
+      pip: 
+        name: ansible[azure] 
+        state: present
+    - name: Install Azure CLI using curl 
+      ansible.builtin.shell: 
+        cmd: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash 
+    - name: Login to Azure using Managed Identity 
+      ansible.builtin.shell: 
+        cmd: az login --identity
+
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Write Kubernetes sources list
+      copy:
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        content: |
+          deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /
+
+    - name: Write CRI-O sources list
+      copy:
+        dest: /etc/apt/sources.list.d/cri-o.list
+        content: |
+          deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/ /
+
+    - name: Write kubeadm configuration file
+      copy:
+        dest: /myconfigs/kubeadm-config.yaml
+        owner: azureuser
+        group: azureuser
+        content: |
+          apiVersion: kubeadm.k8s.io/v1beta4
+          kind: InitConfiguration
+          nodeRegistration:
+            criSocket: unix:///var/run/cri-dockerd.sock
+
+    - name: Create keyrings directory
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download and dearmor Kubernetes apt key
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Download and dearmor CRI-O apt key
+      shell: curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install CRI-O, kubelet, kubeadm, and kubectl
+      apt:
+        name:
+          - cri-o
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+
+    - name: Start CRI-O service
+      systemd:
+        name: crio
+        state: started
+        enabled: yes
+    
+    - name: Hold packages 
+      ansible.builtin.shell: apt-mark hold kubelet kubeadm kubectl cri-o
+
+    - name: Enable and start kubelet service
+      systemd:
+        name: kubelet
+        state: started
+        enabled: yes
+
+    - name: Disable swap
+      command: swapoff -a
+
+    - name: Load br_netfilter module
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        state: present
+        reload: yes
