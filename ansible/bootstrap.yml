@@ -8,13 +8,6 @@
         path: /k8config
         state: directory
         mode: '0777'
-    - name: Create test file
-      copy:
-        dest: /myconfigs/kubeadm-config.yaml
-        owner: azureuser
-        group: azureuser
-        content: |
-          ignore this but ansible works!
     - name: Install Ansible Azure Collection 
       ansible.builtin.command: 
         cmd: ansible-galaxy collection install azure.azcollection --force 
