@@ -5,12 +5,12 @@
   tasks:
     - name: Create directory to test ansible
       file:
-        path: /k8config
+        path: $HOME/k8config
         state: directory
         mode: '0777'
     - name: Create test file
       copy:
-        dest: /myconfigs/kubeadm-config.yaml
+        dest: $HOME/myconfigs/kubeadm-config.yaml
         owner: azureuser
         group: azureuser
         content: |
