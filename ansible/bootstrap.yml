@@ -1,7 +1,7 @@
 ---
 - name: Create a file, configure ansible
   hosts: localhost
-  become: no
+  become: yes
   tasks:
     - name: Create directory to test ansible
       file:
@@ -41,17 +41,6 @@
         dest: /etc/apt/sources.list.d/cri-o.list
         content: |
           deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/ /
-
-    - name: Write kubeadm configuration file
-      copy:
-        dest: /myconfigs/kubeadm-config.yaml
-        owner: azureuser
-        group: azureuser
-        content: |
-          apiVersion: kubeadm.k8s.io/v1beta4
-          kind: InitConfiguration
-          nodeRegistration:
-            criSocket: unix:///var/run/cri-dockerd.sock
 
     - name: Create keyrings directory
       file:
