@@ -1,7 +1,7 @@
 ---
 - name: Create a file, configure ansible
   hosts: localhost
-  become: yes
+  become: no
   tasks:
     - name: Create directory to test ansible
       file:
