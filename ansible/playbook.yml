@@ -1,4 +1,16 @@
 ---
+- name: Run Ansible inventory command
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: List inventory
+      command: ansible-inventory -i myazure_rm.yml --list
+      register: inventory_output
+
+    - name: Display inventory output
+      debug:
+        var: inventory_output.stdout
+
 - name: Retrieve SSH key from Azure Key Vault
   hosts: localhost
   connection: local
