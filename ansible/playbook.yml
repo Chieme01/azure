@@ -5,12 +5,14 @@
   tasks:
     - name: Create a file with content
       copy:
-        dest: /myfiles/file.txt
+        dest: /myfiles/azure_rm.yml
         content: |
           plugin: azure.azcollection.azure_rm
           auth_source: msi
           include_vm_resource_groups:
             - k8-devops-rg
+          keyed_groups:
+            - key: tags.application"
         mode: '0666'
 
 - name: Run Ansible inventory command
