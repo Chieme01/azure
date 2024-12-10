@@ -1,6 +1,6 @@
 ---
 - name: Create a file
-  hosts: all
+  hosts: localhost
   become: no
   tasks:
     - name: Create Dynamic Inventory file
