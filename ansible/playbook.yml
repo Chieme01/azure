@@ -5,7 +5,7 @@
   tasks:
     - name: Create Dynamic Inventory file
       copy:
-        dest: /myfiles/azure_rm.yml
+        dest: azure_rm.yml
         content: |
           plugin: azure.azcollection.azure_rm
           auth_source: msi
@@ -20,7 +20,7 @@
   gather_facts: false
   tasks:
     - name: List inventory
-      command: ansible-inventory -i /myfiles/azure_rm.yml --graph
+      command: ansible-inventory -i azure_rm.yml --graph
       register: inventory_output
 
     - name: Display inventory output
