@@ -1,6 +1,9 @@
 ---
 - name: Retrieve SSH key from Azure Key Vault
   hosts: localhost
+  connection: local
+  collections:
+    - azure.azcollection
   tasks:
     - name: Get SSH key from Key Vault
       set_fact:
