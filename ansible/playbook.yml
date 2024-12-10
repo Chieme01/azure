@@ -1,9 +1,9 @@
 ---
-- name: Create a file with specific content
+- name: Create a file
   hosts: all
   become: no
   tasks:
-    - name: Create a file with content
+    - name: Create Dynamic Inventory file
       copy:
         dest: /myfiles/azure_rm.yml
         content: |
