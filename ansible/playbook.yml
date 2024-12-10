@@ -20,7 +20,7 @@
   gather_facts: false
   tasks:
     - name: List inventory
-      command: ansible-inventory -i myazure_rm.yml --list
+      command: ansible-inventory -i /myfiles/azure_rm.yml --graph
       register: inventory_output
 
     - name: Display inventory output
