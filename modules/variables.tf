@@ -2,6 +2,8 @@ variable "subscription_id" {}
 
 variable "tenant_id" {}
 
+variable "key_vault_name" {}
+
 variable "resource_group_location" {
   type        = string
   default     = "westus"
@@ -18,12 +20,6 @@ variable "username" {
   type        = string
   description = "The username for the local account that will be created on the new VM."
   default     = "azureuser"
-}
-
-variable "vm_pip_sku" {
-  default      = "Basic"
-  description = "The SKU of the Public IP of Virtual Machines. Accepted values are Basic and Standard"
-  type        = string
 }
 
 variable "source_image_reference" {
@@ -45,11 +41,13 @@ variable "source_image_reference" {
 variable "master_vm_size" {
   type = string
   default = "Standard_D2s_v3"
+  description = "Master node requires at least 2 vCPUS and 2 GiB or more of RAM."
 }
 
 variable "worker_vm_size" {
   type = string
   default = "Standard_B2s" #Standard_B2s #Standard_B1s
+  description = "Worker node requires at least 2 GiB of RAM of more."
 }
 
 variable "spot_instance" {
@@ -66,62 +64,6 @@ variable "cluster_size" {
     num_of_controlplanes = 1
     num_of_workers = 2
   }
-}
-
-variable "attach_public_ip" {
-  default = false
-  description = "Attach a public ip to each vm in the cluster."
-}
-
-variable "bastion_host_sku" {
-  default = "Basic"
-  description = "The SKU of the Bastion Host. Accepted values are Developer, Basic, Standard and Premium"
-}
-
-variable "nat_gw_idle_timeout" {
-  default = 4
-  description = "The idle timeout which should be used in minutes"
-}
-
-variable "vnet_address_space" {
-  description = "The address space that is used the virtual network. You can supply more than one address space"
-  default = ["10.0.0.0/16"]
-}
-
-variable "subnet_addresses" {
-  description = "The address prefixes to use for the subnet"
-  default = {
-    private_subnet_address_prefixes = ["10.0.2.0/24"]
-    public_subnet_address_prefixes  = ["10.0.3.0/24"]
-    bastion_subnet_address_prefixes = ["10.0.4.0/27"]
-  }
-}
-
-variable "os_disk" {
-  description = "caching - The Type of Caching which should be used for the Internal OS Disk. Possible values are None, ReadOnly and ReadWrite. | storage_account_type - The Type of Storage Account which should back this the Internal OS Disk. Possible values are Standard_LRS, StandardSSD_LRS, Premium_LRS, StandardSSD_ZRS and Premium_ZRS."
-  default = {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-}
-
-variable "identity_type" {
-  default = "SystemAssigned"
-  description = "Specifies the type of Managed Service Identity that should be configured on this Linux Virtual Machine. Possible values are SystemAssigned, UserAssigned, SystemAssigned, UserAssigned (to enable both)."
-}
-
-variable "pip_allocation" {
-  default = "Static"
-}
-
-variable "bastion_pip_sku" {
-  description = "The SKU of the Public IP of bastion host. Accepted values are Basic and Standard"
-  default = "Standard"
-}
-
-variable "natgw_pip_sku" {
-  description = "The SKU of the Public IP of NAT Gateway. Accepted values are Basic and Standard"
-  default = "Standard"
 }
 
 variable "common_tags" {
@@ -145,6 +87,85 @@ variable "workernode_tags" {
 variable "deploy_extension" {
   default     = false
   description = "Deploying extension at initial run tends fail. Recommended to deploy after initial run."
+}
+
+variable "os_disk" {
+  description = "caching - The Type of Caching which should be used for the Internal OS Disk. Possible values are None, ReadOnly and ReadWrite. | storage_account_type - The Type of Storage Account which should back this the Internal OS Disk. Possible values are Standard_LRS, StandardSSD_LRS, Premium_LRS, StandardSSD_ZRS and Premium_ZRS."
+  default = {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+}
+
+variable "identity_type" {
+  default = "SystemAssigned"
+  description = "Specifies the type of Managed Service Identity that should be configured on this Linux Virtual Machine. Possible values are SystemAssigned, UserAssigned, SystemAssigned, UserAssigned (to enable both)."
+}
+
+variable "cluster_config" {
+  type = map(string)
+  default = {
+    k8s_version       = "v1.32"
+    crio_version      = "v1.32"
+    target_user       = "azureuser"
+    pod_network_cidr  = "10.244.0.0/16"
+  }
+}
+
+#############################################################################################################
+# NETWORK VARIABLES
+#############################################################################################################
+variable "vm_pip_sku" {
+  default      = "Basic"
+  description = "The SKU of the Public IP of Virtual Machines. Accepted values are Basic and Standard"
+  type        = string
+}
+
+variable "attach_public_ip" {
+  default = false
+  description = "Attach a public ip to each vm in the cluster."
+}
+
+variable "bastion_host_sku" {
+  default = "Basic"
+  description = "The SKU of the Bastion Host. Accepted values are Developer, Basic, Standard and Premium"
+  validation {
+    condition     = contains(["Developer", "Basic", "Standard", "Premium"], var.bastion_host_sku)
+    error_message = "The Bastion Host SKU must be one of: Developer, Basic, Standard and Premium."
+  }
+}
+
+variable "nat_gw_idle_timeout" {
+  default = 4
+  description = "The idle timeout which should be used in minutes"
+}
+
+variable "vnet_address_space" {
+  description = "The address space that is used the virtual network. You can supply more than one address space"
+  default = ["10.0.0.0/16"]
+}
+
+variable "subnet_addresses" {
+  description = "The address prefixes to use for the subnet"
+  default = {
+    private_subnet_address_prefixes = ["10.0.2.0/24"]
+    public_subnet_address_prefixes  = ["10.0.3.0/24"]
+    bastion_subnet_address_prefixes = ["10.0.4.0/27"]
+  }
+}
+
+variable "pip_allocation" {
+  default = "Static"
+}
+
+variable "bastion_pip_sku" {
+  description = "The SKU of the Public IP of bastion host. Accepted values are Basic and Standard"
+  default = "Standard"
+}
+
+variable "natgw_pip_sku" {
+  description = "The SKU of the Public IP of NAT Gateway. Accepted values are Basic and Standard"
+  default = "Standard"
 }
 
 #############################################################################################################

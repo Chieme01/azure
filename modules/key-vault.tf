@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "key_vault" {
-  name                            = "lockkeyvault"
+  name                            = var.key_vault_name
   location                        = local.resource_group_location
   resource_group_name             = local.resource_group_name
   enabled_for_disk_encryption     = true
